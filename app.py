@@ -677,5 +677,10 @@ def main():
         if st.session_state.trading_engine is not None:
             st.session_state.trading_engine = initialize_trading_engine(config)
 
+    # After your tabs or main layout
+    with st.expander("Bot Logs"):
+        st.text(log_output)
+
+
 if __name__ == "__main__":
     main()
