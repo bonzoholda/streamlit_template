@@ -116,6 +116,17 @@ if 'portfolio_history' not in st.session_state:
 if 'trading_thread' not in st.session_state:
     st.session_state.trading_thread = None
 
+
+# Bot logs
+log_buffer = []
+
+def log(msg):
+    timestamp = datetime.now().strftime("%H:%M:%S")
+    log_buffer.append(f"[{timestamp}] {msg}")
+    # Optional: Keep only the last 100 lines
+    if len(log_buffer) > 100:
+        log_buffer.pop(0)
+
 # Helper functions
 def load_config():
     """Load configuration from file or create default"""
@@ -679,7 +690,8 @@ def main():
 
     # After your tabs or main layout
     with st.expander("Bot Logs"):
-        st.text(log_output)
+        st.text("\n".join(log_buffer))
+
 
 
 if __name__ == "__main__":
