@@ -12,6 +12,7 @@ import asyncio
 import threading
 from dotenv import load_dotenv
 import pytz
+from PIL import Image  # Make sure to import this if not already
 
 # Load environment variables
 load_dotenv()
