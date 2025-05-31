@@ -448,6 +448,7 @@ def main():
     col1, col2 = st.columns([1, 5])
     
     with col1:
+        st.markdown('<div style="height: 1rem;"></div>', unsafe_allow_html=True)  # Add spacing
         if st.session_state.trading_status == "Stopped":
             if st.button("▶️ Start Trading", use_container_width=True):
                 start_trading()
