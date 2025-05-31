@@ -604,22 +604,48 @@ def main():
     # Risk Management Tab
     with tabs[2]:
         col1, col2 = st.columns(2)
-        
+    
         with col1:
-            config["risk"]["max_position_size_percent"] = st.slider("Max Position Size (%)", min_value=1, max_value=100, value=config["risk"]["max_position_size_percent"])
-        
+            value = config["risk"].get("max_position_size_percent", 10)
+            if isinstance(value, list):
+                value = value[0] if value else 10
+            config["risk"]["max_position_size_percent"] = st.slider(
+                "Max Position Size (%)", min_value=1, max_value=100, value=int(value)
+            )
+    
         with col2:
-            config["risk"]["max_daily_risk_percent"] = st.slider("Max Daily Risk (%)", min_value=1, max_value=50, value=config["risk"]["max_daily_risk_percent"])
-        
+            value = config["risk"].get("max_daily_risk_percent", 5)
+            if isinstance(value, list):
+                value = value[0] if value else 5
+            config["risk"]["max_daily_risk_percent"] = st.slider(
+                "Max Daily Risk (%)", min_value=1, max_value=50, value=int(value)
+            )
+    
         col1, col2 = st.columns(2)
-        
+    
         with col1:
-            config["risk"]["stop_loss_percent"] = st.slider("Stop Loss (%)", min_value=0.1, max_value=10.0, value=config["risk"]["stop_loss_percent"], step=0.1)
-        
+            value = config["risk"].get("stop_loss_percent", 1.0)
+            if isinstance(value, list):
+                value = value[0] if value else 1.0
+            config["risk"]["stop_loss_percent"] = st.slider(
+                "Stop Loss (%)", min_value=0.1, max_value=10.0, value=float(value), step=0.1
+            )
+    
         with col2:
-            config["risk"]["take_profit_percent"] = st.slider("Take Profit (%)", min_value=0.1, max_value=20.0, value=config["risk"]["take_profit_percent"], step=0.1)
-        
-        config["risk"]["max_drawdown_percent"] = st.slider("Max Drawdown (%)", min_value=5, max_value=50, value=config["risk"]["max_drawdown_percent"])
+            value = config["risk"].get("take_profit_percent", 2.0)
+            if isinstance(value, list):
+                value = value[0] if value else 2.0
+            config["risk"]["take_profit_percent"] = st.slider(
+                "Take Profit (%)", min_value=0.1, max_value=20.0, value=float(value), step=0.1
+            )
+    
+        value = config["risk"].get("max_drawdown_percent", 20)
+        if isinstance(value, list):
+            value = value[0] if value else 20
+        config["risk"]["max_drawdown_percent"] = st.slider(
+            "Max Drawdown (%)", min_value=5, max_value=50, value=int(value)
+        )
+
     
     # Profit Compounding Tab
     with tabs[3]:
