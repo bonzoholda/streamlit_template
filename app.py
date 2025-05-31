@@ -32,7 +32,7 @@ from components.performance_calculator import PerformanceCalculator
 
 # Set page config
 st.set_page_config(
-    page_title="OKX Trading Bot",
+    page_title="ShitBOX v2 - OKX Trading Bot",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
