@@ -1,0 +1,35 @@
+{
+    "exchange": {
+        "api_key": "",
+        "api_secret": "",
+        "passphrase": "",
+        "test_mode": true
+    },
+    "trading": {
+        "symbol": "BTC-USDT",
+        "strategy": "TrendFollowing",
+        "interval": "15m",
+        "max_open_positions": 3
+    },
+    "risk": {
+        "max_position_size_percent": 10,
+        "stop_loss_percent": 2,
+        "take_profit_percent": 4,
+        "max_daily_risk_percent": 5,
+        "max_drawdown_percent": 15
+    },
+    "compound": {
+        "enabled": true,
+        "target_compound_rate": 100,
+        "compound_frequency": "Daily"
+    },
+    "trend": {
+        "short_ema": 9,
+        "long_ema": 21
+    },
+    "grid": {
+        "upper_limit": 0,
+        "lower_limit": 0,
+        "grid_levels": 5
+    }
+}
