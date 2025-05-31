@@ -63,7 +63,11 @@ st.markdown("""
         background-color: #f8f9fa;
         border-radius: 0.5rem;
         padding: 1rem;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        height: 100%; /* Ensure full height in Streamlit columns */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
     .metric-value {
         font-size: 1.5rem;
@@ -402,30 +406,43 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         status_class = "status-running" if st.session_state.trading_status == "Running" else "status-stopped"
-        st.markdown(f'<p class="metric-label">Bot Status</p><p class="metric-value {status_class}">{st.session_state.trading_status}</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <p class="metric-label">Bot Status</p>
+            <p class="metric-value {status_class}">{st.session_state.trading_status}</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         win_rate = format_number(st.session_state.performance_metrics['win_rate'])
-        st.markdown(f'<p class="metric-label">Win Rate</p><p class="metric-value">{win_rate}%</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <p class="metric-label">Win Rate</p>
+            <p class="metric-value">{win_rate}%</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         profit_class = "positive-value" if st.session_state.performance_metrics['profit'] >= 0 else "negative-value"
         profit = format_number(st.session_state.performance_metrics['profit'], with_plus=True)
-        st.markdown(f'<p class="metric-label">Total Profit</p><p class="metric-value {profit_class}">{profit} USDT</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <p class="metric-label">Total Profit</p>
+            <p class="metric-value {profit_class}">{profit} USDT</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col4:
-        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
         roi_class = "positive-value" if st.session_state.performance_metrics['roi'] >= 0 else "negative-value"
         roi = format_number(st.session_state.performance_metrics['roi'], with_plus=True)
-        st.markdown(f'<p class="metric-label">ROI</p><p class="metric-value {roi_class}">{roi}%</p>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card">
+            <p class="metric-label">ROI</p>
+            <p class="metric-value {roi_class}">{roi}%</p>
+        </div>
+        """, unsafe_allow_html=True)
+
 
     # Control buttons
     col1, col2 = st.columns([1, 5])
