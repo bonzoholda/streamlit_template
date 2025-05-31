@@ -38,6 +38,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Display the logo at the top (adjust width if needed)
+logo = Image.open("static/box-logo.png")
+st.image(logo, width=150)
+
 # CSS styling
 st.markdown("""
 <style>
