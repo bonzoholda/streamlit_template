@@ -680,13 +680,17 @@ def main():
     if st.button("Save Configuration"):
         save_config(config)
         st.success("Configuration saved successfully!")
-        
+    
         if st.session_state.trading_status == "Running":
             st.warning("Please restart the trading bot to apply the new configuration.")
-        
-        # Re-initialize trading engine if it's already running
-        if st.session_state.trading_engine is not None:
+    
+        # Always initialize if not present
+        if "trading_engine" not in st.session_state or st.session_state.trading_engine is None:
             st.session_state.trading_engine = initialize_trading_engine(config)
+        else:
+            # Reinitialize if already present
+            st.session_state.trading_engine = initialize_trading_engine(config)
+
 
     # After your tabs or main layout
     with st.expander("Bot Logs"):
