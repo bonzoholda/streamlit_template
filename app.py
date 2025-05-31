@@ -238,30 +238,40 @@ def initialize_trading_engine(config):
 
 def start_trading():
     """Start the trading bot"""
-    if st.session_state.trading_engine is None:
+
+    if "trading_engine" not in st.session_state or st.session_state.trading_engine is None:
         config = load_config()
         st.session_state.trading_engine = initialize_trading_engine(config)
-    
+
     if st.session_state.trading_engine is not None:
         try:
-            def trading_loop():
-                st.session_state.trading_engine.start()
-                while st.session_state.trading_status == "Running":
+            # Capture needed vars locally
+            engine = st.session_state.trading_engine
+
+            def trading_loop(engine):
+                engine.start()
+                while True:
+                    if st.session_state.trading_status != "Running":
+                        engine.stop()
+                        break
                     time.sleep(1)
-                st.session_state.trading_engine.stop()
-            
+
             st.session_state.trading_status = "Running"
-            st.session_state.trading_thread = threading.Thread(target=trading_loop)
-            st.session_state.trading_thread.daemon = True
+            st.session_state.trading_thread = threading.Thread(
+                target=trading_loop,
+                args=(engine,),  # pass engine to the thread
+                daemon=True
+            )
             st.session_state.trading_thread.start()
-            
-            # Initialize with some mock data for demonstration
-            if st.session_state.trading_engine.get_status() != "Error":
+
+            # Optional: simulate some UI data if engine is running fine
+            if engine.get_status() != "Error":
                 create_mock_data()
-            
+
         except Exception as e:
             st.error(f"Error starting trading bot: {str(e)}")
             st.session_state.trading_status = "Stopped"
+
 
 def stop_trading():
     """Stop the trading bot"""
