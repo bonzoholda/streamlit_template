@@ -115,6 +115,9 @@ if 'portfolio_history' not in st.session_state:
     })
 if 'trading_thread' not in st.session_state:
     st.session_state.trading_thread = None
+if 'trading_stop_event' not in st.session_state:
+    st.session_state.trading_stop_event = threading.Event()
+
 
 
 # Bot logs
@@ -238,34 +241,32 @@ def initialize_trading_engine(config):
 
 def start_trading():
     """Start the trading bot"""
-
-    if "trading_engine" not in st.session_state or st.session_state.trading_engine is None:
+    if st.session_state.trading_engine is None:
         config = load_config()
         st.session_state.trading_engine = initialize_trading_engine(config)
 
     if st.session_state.trading_engine is not None:
         try:
-            # Capture needed vars locally
-            engine = st.session_state.trading_engine
-
-            def trading_loop(engine):
+            def trading_loop(engine, stop_event):
                 engine.start()
-                while True:
-                    if st.session_state.trading_status != "Running":
-                        engine.stop()
-                        break
-                    time.sleep(1)
+                while not stop_event.is_set():
+                    time.sleep(5)
+                engine.stop()
 
+            # Set state and clear stop event
             st.session_state.trading_status = "Running"
+            st.session_state.trading_stop_event.clear()
+
+            # Start thread with arguments
             st.session_state.trading_thread = threading.Thread(
                 target=trading_loop,
-                args=(engine,),  # pass engine to the thread
+                args=(st.session_state.trading_engine, st.session_state.trading_stop_event),
                 daemon=True
             )
             st.session_state.trading_thread.start()
 
-            # Optional: simulate some UI data if engine is running fine
-            if engine.get_status() != "Error":
+            # Optional: preload data
+            if st.session_state.trading_engine.get_status() != "Error":
                 create_mock_data()
 
         except Exception as e:
@@ -275,10 +276,18 @@ def start_trading():
 
 def stop_trading():
     """Stop the trading bot"""
+    if 'trading_stop_event' in st.session_state:
+        st.session_state.trading_stop_event.set()  # Signal the thread to stop
+
     st.session_state.trading_status = "Stopped"
+
+    # Wait for the thread to finish
     if st.session_state.trading_thread is not None:
         st.session_state.trading_thread.join(timeout=5)
+        st.session_state.trading_thread = None  # Reset the thread reference
+
     st.session_state.trading_engine = None
+
 
 def create_mock_data():
     """Create mock data for demonstration purposes"""
